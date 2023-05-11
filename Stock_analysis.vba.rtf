@@ -1,0 +1,119 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 Sub stocks()\
+\
+Dim ws As Worksheet\
+Dim wb As Workbook\
+Set wb = ActiveWorkbook\
+For Each ws In Worksheets\
+Dim ticker_name As String\
+Dim counter As Integer\
+Dim Stock_volume As Double\
+Dim year As Long\
+Dim open_price As Double\
+Dim close_price As Double\
+Dim yearly_price_change As Double\
+Dim price_change_percent As Double\
+Dim max_percent As Double\
+Dim min_percent As Double\
+Dim max_voulme As Double\
+Dim max_ticker_name As String\
+Dim min_ticker_name As String\
+Dim max_volume As Double\
+Dim max_volume_name As String\
+\
+\
+\
+yearly_price_change = 0\
+\
+\
+\
+'setting counter value=2\
+counter = 2\
+\
+' Intializin row names\
+ws.Range("I1").Value = "ticker"\
+ws.Range("J1").Value = "Yearly Change"\
+ws.Range("K1").Value = "Percent Change"\
+ws.Range("L1").Value = "Total stock Volume"\
+\
+'Intializing Last row of sheets\
+lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row\
+\
+'intializing open pricevalue\
+open_price = ws.Cells(2, 3).Value\
+\
+\
+\
+For i = 2 To lastrow\
+ If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then\
+\
+ ticker_name = ws.Cells(i, 1).Value\
+ close_price = ws.Cells(i, 6).Value\
+ yearly_price_change = close_price - open_price\
+ If (open_price <> 0) Then\
+  price_change_percent = (yearly_price_change / open_price) * 100\
+  ws.Range("K" & counter).Value = (CStr(price_change_percent) & "%")\
+  End If\
+\
+ Stock_volume = Stock_volume + ws.Cells(i, 7).Value\
+ \
+ ws.Range("I" & counter).Value = ticker_name\
+ ws.Range("J" & counter).Value = yearly_price_change\
+ ws.Range("L" & counter).Value = Stock_volume\
+\
+  open_price = ws.Cells(i + 1, 3).Value\
+  \
+  If (yearly_price_change >= 0) Then\
+  ws.Range("j" & counter).Interior.Color = vbGreen\
+  ElseIf (yearly_price_change < 0) Then\
+  ws.Range("j" & counter).Interior.Color = vbRed\
+  End If\
+  \
+  If (price_change_percent > max_percent) Then\
+  max_percent = price_change_percent\
+  max_ticker_name = ticker_name\
+  \
+  ElseIf (price_change_percent < min_percent) Then\
+  min_percent = price_change_percent\
+  min_ticker_name = ticker_name\
+  End If\
+  \
+  If (Stock_volume > max_volume) Then\
+  max_volume = Stock_volume\
+  max_volume_name = ticker_name\
+  End If\
+\
+    Stock_volume = 0\
+    price_change_percent = 0\
+    counter = counter + 1\
+  Else\
+  \
+  Stock_volume = Stock_volume + ws.Cells(i, 7).Value\
+  \
+ \
+End If\
+ \
+ Next i\
+ ws.Range("o1").Value = "ticker"\
+ ws.Range("p1").Value = "value"\
+ ws.Range("N2").Value = "greatest % Increase"\
+ ws.Range("N3").Value = "Greatest % Decrease"\
+ ws.Range("N4").Value = " Greatest total Volume"\
+ ws.Range("o2").Value = max_ticker_name\
+  ws.Range("o3").Value = min_ticker_name\
+  ws.Range("o4").Value = max_volume_name\
+  ws.Range("p2").Value = (Str(max_percent) & "%")\
+  ws.Range("p3").Value = (Str(min_percent) & "%")\
+  ws.Range("p4").Value = max_volume\
+  \
+  \
+\
+Next ws\
+End Sub\
+}
